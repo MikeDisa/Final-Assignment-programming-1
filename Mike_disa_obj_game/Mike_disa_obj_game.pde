@@ -1,18 +1,22 @@
+int Spot1 = 200;
+int Spot2 = 100;
+int Spot3 = 300;
 
-
-//Activate object
-Cup cup1;
+//Activate object array
+Cup[] Cup = new Cup[3];
 
 //Standard procedure
 void setup(){
   size(400,400);
-  cup1 = new Cup();
+  for (int i = 0; i< Cup.length; i++){
+  Cup[i] = new Cup();
+  }
 }
 
 //The visual part
 void draw(){
   
-  cup1.display();
+  Cup[1].display();
 }
 
 
@@ -25,6 +29,6 @@ class Cup {
   
   void display() {
     fill(0,0,255);
-    rect(200,200,200,200);
+    rect(200,200,50,100);
   }
 }
