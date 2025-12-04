@@ -1,4 +1,4 @@
-
+int GameState = 1; //Gmae state tracker. 1=Start, 2=in Progress, 3=end
 int Index = 0;
 
 //Activate object array
@@ -20,6 +20,11 @@ void setup(){
   Spot[2] = 300;
 }
 
+//adding in mouse action, Just drops raised cup
+void mouseClicked() {
+  GameState = 2;
+}
+
 //The visual part
 void draw(){
   
@@ -34,13 +39,19 @@ void draw(){
 // Create cup object
 class Cup {
   
-  Cup(){
+  Cup(){ //A constructor of the same name to be used for some reason
     
   }
   
   void display() {
     fill(0,0,255);
-    rect(Spot[Index],200,50,100);
+    //At the start of the game the middle cup starts up.
+    if(GameState == 1&&Index==1){
+      rect(Spot[Index],100,50,100);
+    }
+      else{
+      rect(Spot[Index],200,50,100);
+    }
     println("Cup "+Index);//something to help with troubleshooting
   }
 }
