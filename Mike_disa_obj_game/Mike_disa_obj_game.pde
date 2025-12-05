@@ -1,3 +1,6 @@
+//Dealer bits
+DealerHandR handR;
+
 
 int GameState = 1; //Game state tracker. 1=Start, 2=in Progress, 3=end
 int Index = 0;
@@ -21,6 +24,9 @@ boolean allAtTargets = false;
 ////////////////////////////////////////////////////////////////////////
 void setup() {
   size(400, 400);
+  //dealer stuff
+  handR = new DealerHandR(160,2);
+  
   // image stuff
   CupSprite = loadImage("RedCup.png");
   
@@ -94,7 +100,7 @@ void keyPressed(){
 void draw() {
   fill(198,198,198);
   rect(0,0,400,400);
-  //table
+  //table////////////////////////////////////
   fill(137,76,11);
   beginShape();
   vertex(400,400);
@@ -102,9 +108,18 @@ void draw() {
   vertex(80,250);
   vertex(320,250);
   endShape();
-  //ball
+  
+  //ball///////////////////////////////////////////
   fill(224,190,16);
   ellipse(Cup[1].pos.x+20,280,25,25);
+  
+  ////////////Dealer////////////////////////////
+  fill(255,255,255);
+  if ((GameState==1)||(GameState==2)){
+    handR.update();
+  }
+  
+  ////////////Cups///////////////////////////
   allAtTargets = true;
 
   //loop to manage all 3 cups
@@ -117,3 +132,41 @@ void draw() {
     shuffling = false;
   }
 }
+
+
+//Dealer class
+//Look familiar? yeah I gutted the train class from train_whistle example
+class DealerHandR {
+  PVector position;
+  PVector velocity;
+  int direction;
+  
+  DealerHandR(float y, float speed) {
+    position = new PVector(0, y);
+    velocity = new PVector(speed, 0);
+    direction = 1;
+  }
+  void update() {
+    //check if the train is at the edge of the screen, if so reverse train direction
+    bounce();
+    //increase train position in the direction we want
+    moveHandR();
+    //draw the train:
+    drawHandR();
+    }
+    
+     void moveHandR() {
+    position.add(velocity.mult(direction));
+  }
+  
+  void bounce() {
+    if ( (position.x + 50) >= width || position.x < 0) {
+      direction = direction * -1;
+    }
+  }
+  void drawHandR(){
+    fill(255,255,255);
+    rect(position.x, position.y + 20, 50, 20);
+  }
+  }
+  
