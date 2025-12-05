@@ -40,6 +40,7 @@ PVector pos;
     // Checks if mouse is within cup hitbox 
     if (mouseX > cupX && mouseX < cupX + 50 && mouseY > cupY && mouseY < cupY + 100) {
       println("Clicked cup " + index);
+      selectedCup = index;
       shuffling = false;
 
         //
@@ -69,6 +70,9 @@ PVector pos;
           vel.set(0, 0);
           acc.set(0, 0);
           dropping = false;
+          if (shuffledOnce) {
+        shuffling = true;
+          }
         }
       }
     }

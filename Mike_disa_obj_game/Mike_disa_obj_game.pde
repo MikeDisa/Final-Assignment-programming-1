@@ -1,7 +1,7 @@
 //Dealer bits
 DealerHandR handR;
 
-
+int selectedCup;
 int GameState = 1; //Game state tracker. 1=Start, 2=in Progress, 3=end
 int Index = 0;
 int Moves = 5; //the number of times the cups will be shuffled
@@ -47,9 +47,8 @@ void mouseClicked() {
   if (GameState == 1) {
     GameState = 2;
     dropping = true;
-    return;
-  } 
-  if (GameState == 2 && !dropping && !shuffling && !shuffledOnce) {
+    
+    
     // incremental difficulty shuffle once the game is in progress
     for (int i = 0; i < Moves; i++) {
       int a = int(random(3));
@@ -69,7 +68,6 @@ void mouseClicked() {
       Cup[i].targetX = Spot[i];
     }
 
-    shuffling = true;
     shuffledOnce = true;
     return;
   }
@@ -100,6 +98,7 @@ void keyPressed(){
 void draw() {
   fill(198,198,198);
   rect(0,0,400,400);
+  
   //table////////////////////////////////////
   fill(137,76,11);
   beginShape();
@@ -119,6 +118,7 @@ void draw() {
     handR.update();
   }
   
+  
   ////////////Cups///////////////////////////
   allAtTargets = true;
 
@@ -131,42 +131,11 @@ void draw() {
   if (shuffling && allAtTargets) {
     shuffling = false;
   }
+  if (GameState == 3 && selectedCup != -1) {
+    float handX = Cup[selectedCup].pos.x;
+    float handY = Cup[selectedCup].pos.y - 12;
+
+    fill(255);           
+    rect(handX, handY, 50, 10);
+  }
 }
-
-
-//Dealer class
-//Look familiar? yeah I gutted the train class from train_whistle example
-class DealerHandR {
-  PVector position;
-  PVector velocity;
-  int direction;
-  
-  DealerHandR(float y, float speed) {
-    position = new PVector(0, y);
-    velocity = new PVector(speed, 0);
-    direction = 1;
-  }
-  void update() {
-    //check if the train is at the edge of the screen, if so reverse train direction
-    bounce();
-    //increase train position in the direction we want
-    moveHandR();
-    //draw the train:
-    drawHandR();
-    }
-    
-     void moveHandR() {
-    position.add(velocity.mult(direction));
-  }
-  
-  void bounce() {
-    if ( (position.x + 50) >= width || position.x < 0) {
-      direction = direction * -1;
-    }
-  }
-  void drawHandR(){
-    fill(255,255,255);
-    rect(position.x, position.y + 20, 50, 20);
-  }
-  }
-  
