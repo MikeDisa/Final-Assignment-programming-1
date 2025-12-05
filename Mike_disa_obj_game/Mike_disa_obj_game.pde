@@ -1,6 +1,11 @@
+
 int GameState = 1; //Game state tracker. 1=Start, 2=in Progress, 3=end
 int Index = 0;
 int Moves = 5; //the number of times the cups will be shuffled
+boolean Win = false;
+
+//////Image managers///////////
+PImage CupSprite;
 
 //Activate object array
 Cup[] Cup = new Cup[3];
@@ -14,9 +19,10 @@ boolean shuffling = false; //triggers when cups try to move
 boolean shuffledOnce = false; //should stop stuff from getting stuck
 boolean allAtTargets = false;
 ////////////////////////////////////////////////////////////////////////
-//Standard procedure
 void setup() {
   size(400, 400);
+  // image stuff
+  CupSprite = loadImage("RedCup.png");
   
     //Fill the array with location data
   Spot[0] = 100;
@@ -67,15 +73,38 @@ void mouseClicked() {
   for (int i = 0; i < Cup.length; i++) {
     Cup[i].update(i);
   }
+  if (Index == 1){
+      Win = true;
+      println("win");
+    }
+    if ((Index == 0)||(Index == 2)){
+      Win = false;
+      println("loose");
+    }
 }
 }
-
+//////////////////////////////////////////////////////////////////////////////////
+void keyPressed(){
+  if ((key == ' ')&&(GameState ==3)){
+    println("reset");
+  }
+}
 //////////////////////////////////////////////////////////////////////////////////
 //The visual part
 void draw() {
   fill(198,198,198);
   rect(0,0,400,400);
-  
+  //table
+  fill(137,76,11);
+  beginShape();
+  vertex(400,400);
+  vertex(0,400);
+  vertex(80,250);
+  vertex(320,250);
+  endShape();
+  //ball
+  fill(224,190,16);
+  ellipse(Cup[1].pos.x+20,280,25,25);
   allAtTargets = true;
 
   //loop to manage all 3 cups

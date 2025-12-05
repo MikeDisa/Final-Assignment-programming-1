@@ -105,6 +105,6 @@ PVector pos;
 
   void display() {
   fill(0, 0, 255);
-  rect(pos.x, pos.y, 50, 100);
+  image(CupSprite,pos.x, pos.y, 50, 100);
 }
 }
