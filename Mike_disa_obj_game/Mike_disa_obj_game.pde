@@ -26,25 +26,9 @@ void mouseClicked() {
     GameState = 2;
   }
   //Check each cup to see if it was clicked
-  if (GameState == 2) {for (int i = 0; i < Cup.length; i++) {
-
-    int cupX = Spot[i]; //switched to variables
-    int cupY;
-
-    //revised version of cup raiser using variables
-    if (GameState == 1 && i == 1) {
-      cupY = 100;
-    } else {
-      cupY = 200;
-    }
-
-    //if mouse is within cup dimensions, register a click
-    if (mouseX > cupX && mouseX < cupX + 50 && mouseY > cupY && mouseY < cupY + 100) {
-
-      println("Clicked cup " + i);
-    }
+  for (int i = 0; i < Cup.length; i++){
+    Cup[i].update(i);
   }
-}
 }
 
 //The visual part
@@ -65,6 +49,29 @@ class Cup {
 
   Cup() { //A constructor of the same name to be used for some reason
   }
+  
+  void update(int index){
+    //Check each cup to see if it was clicked
+  if (GameState == 2)  {
+
+    int cupX = Spot[index]; //switched to variables
+    int cupY;
+
+    //revised version of cup raiser using variables
+    if (GameState == 1 && index == 1) {
+      cupY = 100;
+    } else {
+      cupY = 200;
+    }
+
+    //if mouse is within cup dimensions, register a click
+    if (mouseX > cupX && mouseX < cupX + 50 && mouseY > cupY && mouseY < cupY + 100) {
+
+      println("Clicked cup " + index);
+    }
+  }
+}
+  
 
 
 
