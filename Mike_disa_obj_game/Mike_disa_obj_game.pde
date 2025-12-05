@@ -10,6 +10,9 @@ int[] Spot = new int[3];
 
 boolean dropping = false; //tracks first falling cup
 boolean shuffling = false; //triggers when cups try to move
+
+boolean shuffledOnce = false; //should stop stuff from getting stuck
+boolean allAtTargets = false;
 ////////////////////////////////////////////////////////////////////////
 //Standard procedure
 void setup() {
@@ -32,7 +35,9 @@ void mouseClicked() {
   if (GameState == 1) {
     GameState = 2;
     dropping = true;
-  } else if (GameState == 2) {
+    return;
+  } 
+  if (GameState == 2 && !dropping && !shuffling && !shuffledOnce) {
     // incremental difficulty shuffle once the game is in progress
     for (int i = 0; i < Moves; i++) {
       int a = int(random(3));
@@ -53,12 +58,16 @@ void mouseClicked() {
     }
 
     shuffling = true;
+    shuffledOnce = true;
+    return;
   }
 
   //Check each cup to see if it was clicked, using their animated positions
+  if (GameState == 2 && !dropping && !shuffling && shuffledOnce) {
   for (int i = 0; i < Cup.length; i++) {
     Cup[i].update(i);
   }
+}
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -66,12 +75,17 @@ void mouseClicked() {
 void draw() {
   fill(198,198,198);
   rect(0,0,400,400);
+  
+  allAtTargets = true;
 
   //loop to manage all 3 cups
   for (int i=0; i< Cup.length; i++) {
     Index =i; //something to help with troubleshooting
     Cup[i].updateMotion();
     Cup[i].display();
+  }
+  if (shuffling && allAtTargets) {
+    shuffling = false;
   }
 }
 
@@ -88,6 +102,8 @@ PVector pos;
   float targetY;
   int index;
   
+  boolean lift;
+  
   Cup(int idx) {
     index = idx;
 
@@ -98,6 +114,8 @@ PVector pos;
 
     targetX = pos.x;
     targetY = 200;
+    
+    lift = false;
 
     // middle cup starts raised at game start
     if (index == 1 && GameState == 1) {
@@ -112,9 +130,18 @@ PVector pos;
     int cupY = int(pos.y);
     
     // Checks if mouse is within cup hitbox 
-    if (mouseX > cupX && mouseX < cupX + 50 &&
-        mouseY > cupY && mouseY < cupY + 100) {
+    if (mouseX > cupX && mouseX < cupX + 50 && mouseY > cupY && mouseY < cupY + 100) {
       println("Clicked cup " + index);
+      shuffling = false;
+
+        //
+        targetY = 100;
+        lift = true;
+        vel.y = 0;
+        acc.y = 0;
+
+        //End the game
+        GameState = 3;
     }
   }
 }
@@ -137,13 +164,28 @@ PVector pos;
         }
       }
     }
+    
+    //lifts up a clicked cup
+    if (GameState == 3 && lift) {
+      if (pos.y > targetY) {
+        acc.y = -0.5;     //lifts up the cup
+        vel.add(acc);
+        pos.add(vel);
+        if (pos.y <= targetY) {
+          pos.y = targetY;
+          vel.set(0, 0);
+          acc.set(0, 0);
+          lift = false; 
+        }
+      }
+    }
 
     //moves while shuffling
     if (shuffling) {
       float dx = targetX - pos.x;
 
       if (abs(dx) > 1) {
-       
+       allAtTargets = false;
         vel.x = dx * 0.2;
         pos.x += vel.x;
       } else {
