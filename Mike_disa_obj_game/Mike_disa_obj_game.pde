@@ -1,5 +1,6 @@
-int GameState = 1; //Gmae state tracker. 1=Start, 2=in Progress, 3=end
+int GameState = 1; //Game state tracker. 1=Start, 2=in Progress, 3=end
 int Index = 0;
+int Moves = 5; //the number of times the cups will be shuffled
 
 //Activate object array
 Cup[] Cup = new Cup[3];
@@ -24,6 +25,21 @@ void setup() {
 void mouseClicked() {
   if (GameState == 1){
     GameState = 2;
+    //incrimental difficulty shuffle function once screen is clicked is clicked
+    for (int i = 0; i < Moves; i++){
+      // pick two random cups
+  int a = int(random(3));
+  int b = int(random(3));
+
+ while (b == a) {
+    b = int(random(3));
+  }
+
+  // Use a temp varriable to switch location data
+  int temp = Spot[a];
+  Spot[a] = Spot[b];
+  Spot[b] = temp;
+    }
   }
   //Check each cup to see if it was clicked
   for (int i = 0; i < Cup.length; i++){
