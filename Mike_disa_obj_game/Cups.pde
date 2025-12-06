@@ -9,6 +9,7 @@ PVector pos;
   float targetX;
   float targetY;
   int index;
+  int selectedCup = -1;
   
   boolean lift;
   
@@ -33,7 +34,7 @@ PVector pos;
   
   //Simplified version for vectors
   void update(int index) {
-  if (GameState == 2) {
+  if (GameState == 2 && !dropping && !shuffling) {
     int cupX = int(pos.x);
     int cupY = int(pos.y);
     
@@ -41,13 +42,22 @@ PVector pos;
     if (mouseX > cupX && mouseX < cupX + 50 && mouseY > cupY && mouseY < cupY + 100) {
       println("Clicked cup " + index);
       selectedCup = index;
-      shuffling = false;
+      //shuffling = false;
 
-        //
-        targetY = 100;
-        lift = true;
-        vel.y = 0;
-        acc.y = 0;
+     if (index == 1) { 
+       Win = true;
+        println("win");
+      } else {
+        Win = false;
+        println("lose");
+      }
+
+      // stop shuffle and start lift animation
+      shuffling = false;
+      targetY = 100;
+      lift = true;
+      vel.y = 0;
+      acc.y = 0;
 
         //End the game
         GameState = 3;
@@ -109,6 +119,6 @@ PVector pos;
 
   void display() {
   fill(0, 0, 255);
-  image(CupSprite,pos.x, pos.y, 50, 100);
+  image(CupSprite,pos.x, pos.y+15, 80, 80);
 }
 }

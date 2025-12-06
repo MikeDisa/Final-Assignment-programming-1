@@ -1,7 +1,7 @@
 //Dealer bits
 DealerHandR handR;
-
-int selectedCup;
+DealerHandL handL;
+int selectedCup = -1;
 int GameState = 1; //Game state tracker. 1=Start, 2=in Progress, 3=end
 int Index = 0;
 int Moves = 5; //the number of times the cups will be shuffled
@@ -9,9 +9,17 @@ boolean Win = false;
 
 //////Image managers///////////
 PImage CupSprite;
+PImage HandR;
+PImage HandRLift;
+PImage HandL;
+PImage Dealer;
+PImage Dealer2;
+PImage Dealerbreak;
+PImage Ball;
+PImage table;
 
 //Activate object array
-Cup[] Cup = new Cup[3];
+Cup[] Cups = new Cup[3];
 
 //Activate location tracking array
 int[] Spot = new int[3];
@@ -26,18 +34,27 @@ void setup() {
   size(400, 400);
   //dealer stuff
   handR = new DealerHandR(160,2);
+  handL = new DealerHandL(170,1.5);
   
   // image stuff
   CupSprite = loadImage("RedCup.png");
-  
+  HandR = loadImage("handR.png");
+  HandRLift = loadImage("hand2.png");
+  HandL = loadImage ("handL.png");
+  Dealer = loadImage ("Dealer1.png");
+  Dealer2 = loadImage ("Dealer2.png");
+  Dealerbreak = loadImage ("DealerBreak2.png");
+  Ball = loadImage ("GoldBall.png");
+  table = loadImage ("table.png");
+
     //Fill the array with location data
-  Spot[0] = 100;
-  Spot[1] = 200;
-  Spot[2] = 300;
+  Spot[0] = 80;
+  Spot[1] = 180;
+  Spot[2] = 280;
   
   //Fill the array with cup objects
-  for (int i = 0; i< Cup.length; i++) {
-    Cup[i] = new Cup(i);
+  for (int i = 0; i< Cups.length; i++) {
+    Cups[i] = new Cup(i);
   }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,8 +81,8 @@ void mouseClicked() {
     }
 
     // Tells each cup where it's trying to go
-    for (int i = 0; i < Cup.length; i++) {
-      Cup[i].targetX = Spot[i];
+    for (int i = 0; i < Cups.length; i++) {
+      Cups[i].targetX = Spot[i];
     }
 
     shuffledOnce = true;
@@ -74,17 +91,9 @@ void mouseClicked() {
 
   //Check each cup to see if it was clicked, using their animated positions
   if (GameState == 2 && !dropping && !shuffling && shuffledOnce) {
-  for (int i = 0; i < Cup.length; i++) {
-    Cup[i].update(i);
+  for (int i = 0; i < Cups.length; i++) {
+    Cups[i].update(i);
   }
-  if (Index == 1){
-      Win = true;
-      println("win");
-    }
-    if ((Index == 0)||(Index == 2)){
-      Win = false;
-      println("loose");
-    }
 }
 }
 //////////////////////////////////////////////////////////////////////////////////
@@ -96,46 +105,52 @@ void keyPressed(){
 //////////////////////////////////////////////////////////////////////////////////
 //The visual part
 void draw() {
-  fill(198,198,198);
+  fill(64,64,64);
   rect(0,0,400,400);
   
   //table////////////////////////////////////
-  fill(137,76,11);
-  beginShape();
-  vertex(400,400);
-  vertex(0,400);
-  vertex(80,250);
-  vertex(320,250);
-  endShape();
+  image(table,0,0);
   
   //ball///////////////////////////////////////////
   fill(224,190,16);
-  ellipse(Cup[1].pos.x+20,280,25,25);
+  image(Ball,Cups[1].pos.x +20,240);
   
   ////////////Dealer////////////////////////////
-  fill(255,255,255);
+  if ((GameState==1)||(GameState==2)){
+    image(Dealer,0,0);
+  }
+  if ((GameState==3)&&(!Win)){
+    image(Dealer2,0,0);
+  }
+ if ((GameState==3)&&(Win)){
+    image(Dealerbreak,10,10,350,350);
+  }
   if ((GameState==1)||(GameState==2)){
     handR.update();
   }
-  
+  if (!Win){
+    handL.update();
+  }
   
   ////////////Cups///////////////////////////
   allAtTargets = true;
 
   //loop to manage all 3 cups
-  for (int i=0; i< Cup.length; i++) {
+  for (int i=0; i< Cups.length; i++) {
     Index =i; //something to help with troubleshooting
-    Cup[i].updateMotion();
-    Cup[i].display();
+    Cups[i].updateMotion();
+    Cups[i].display();
   }
   if (shuffling && allAtTargets) {
     shuffling = false;
   }
   if (GameState == 3 && selectedCup != -1) {
-    float handX = Cup[selectedCup].pos.x;
-    float handY = Cup[selectedCup].pos.y - 12;
+    Cup c = Cups[selectedCup];
+    float cupWidth = 50;
+    float handX = c.pos.x + cupWidth / 2;
+    float handY = c.pos.y + 10;
 
     fill(255);           
-    rect(handX, handY, 50, 10);
+    image(HandRLift,handX-50, handY-100);
   }
 }

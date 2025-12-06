@@ -1,11 +1,10 @@
-
 //Look familiar? yeah I gutted the train class from train_whistle example
-class DealerHandR {
+class DealerHandL {
   PVector position;
   PVector velocity;
   int direction;
   
-  DealerHandR(float x, float speed) {
+  DealerHandL(float x, float speed) {
     position = new PVector(x,180);
     velocity = new PVector(0,speed);
     direction = 1;
@@ -14,12 +13,12 @@ class DealerHandR {
     //check if the train is at the edge of the screen, if so reverse train direction
     bounce();
     //increase train position in the direction we want
-    moveHandR();
+    moveHandL();
     //draw the train:
-    drawHandR();
+    drawHandL();
     }
     
-     void moveHandR() {
+     void moveHandL() {
     position.add(velocity.mult(direction));
   }
   
@@ -28,9 +27,8 @@ class DealerHandR {
       direction = direction * -1;
     }
   }
-  void drawHandR(){
+  void drawHandL(){
     fill(255,255,255);
-    image(HandR,position.x -150, position.y-210);
+    image(HandL,position.x +100, position.y-200);
   }
   }
-  
