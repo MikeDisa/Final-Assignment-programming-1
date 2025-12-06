@@ -32,6 +32,7 @@ boolean allAtTargets = false;
 ////////////////////////////////////////////////////////////////////////
 void setup() {
   size(400, 400);
+  println("Press SPACE to reset");
   //dealer stuff
   handR = new DealerHandR(160,2);
   handL = new DealerHandL(170,1.5);
@@ -98,8 +99,40 @@ void mouseClicked() {
 }
 //////////////////////////////////////////////////////////////////////////////////
 void keyPressed(){
-  if ((key == ' ')&&(GameState ==3)){
+  if (key == ' ' && GameState == 3) {
     println("reset");
+
+    // reset game state
+    GameState = 1;
+    Win = false;
+    selectedCup = -1;
+
+    dropping = false;
+    shuffling = false;
+    shuffledOnce = false;
+    allAtTargets = false;
+
+    // reset cup locations array
+    Spot[0] = 80;
+    Spot[1] = 180;
+    Spot[2] = 280;
+
+    // reset cups
+    for (int i = 0; i < Cups.length; i++) {
+      Cups[i].pos.x = Spot[i];
+      Cups[i].pos.y = 200;
+      Cups[i].vel.set(0, 0);
+      Cups[i].acc.set(0, 0);
+      Cups[i].targetX = Spot[i];
+      Cups[i].targetY = 200;
+      Cups[i].lift = false;
+    }
+    // reset raised cup
+    Cups[1].pos.y = 100;
+
+    // reset dealer hands
+    handR = new DealerHandR(160, 2);
+    handL = new DealerHandL(170, 1.5);
   }
 }
 //////////////////////////////////////////////////////////////////////////////////
